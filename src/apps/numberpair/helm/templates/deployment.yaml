@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "number-pair.fullname" . }}
+  labels:
+    {{- include "number-pair.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "number-pair.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "number-pair.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: BASE_PATH
+              value: /{{ .Release.Namespace }}
+            - name: MAX_ONE
+              valueFrom:
+                configMapKeyRef:
+                  name: pair-limits
+                  key: one
+            - name: MAX_TWO
+              valueFrom:
+                configMapKeyRef:
+                  name: pair-limits
+                  key: two
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /{{ .Release.Namespace }}/health
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /{{ .Release.Namespace }}/health
+              port: http

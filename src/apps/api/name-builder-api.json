@@ -1,0 +1,118 @@
+{
+	"openapi": "3.0.3",
+	"info":
+	{
+		"title": "Name builder service",
+		"description": "HTTP service for generating a name composed of a randomly chosen noun and a randomly chosen adjective",
+		"version": "1.0"
+	},
+	"paths":
+	{
+		"/name":
+		{
+			"get":
+			{
+				"summary": "Generate a new name",
+				"responses":
+				{
+					"200":
+					{
+						"description": "A new name was generated successfully",
+						"content":
+						{
+							"application/json":
+							{
+								"schema":
+								{
+									"$ref": "#/components/schemas/name-response-body-wrapper"
+								}
+							}
+						}
+					},
+					"500":
+					{
+						"description": "Something went wrong while computing name",
+						"content":
+						{
+							"application/json":
+							{
+								"schema":
+								{
+									"$ref": "#/components/schemas/name-response-body-wrapper"
+								}
+							}
+						}
+					},
+					"502":
+					{
+						"description": "Calling either of the downstream services failed",
+						"content":
+						{
+							"application/json":
+							{
+								"schema":
+								{
+									"$ref": "#/components/schemas/name-response-body-wrapper"
+								}
+							}
+						}
+					},
+					"503":
+					{
+						"description": "Either this service or one of the downstream services is temporarily overloaded",
+						"content":
+						{
+							"application/json":
+							{
+								"schema":
+								{
+									"$ref": "#/components/schemas/name-response-body-wrapper"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components":
+	{
+		"schemas":
+		{
+			"error-response-body":
+			{
+				"type": "object",
+				"properties":
+				{
+					"message":
+					{
+						"type": "string"
+					}
+				}
+			},
+			"name-response-body":
+			{
+				"type": "object",
+				"properties":
+				{
+					"name":
+					{
+						"type": "string"
+					}
+				}
+			},
+			"name-response-body-wrapper":
+			{
+				"oneOf":
+				[
+					{
+						"$ref": "#/components/schemas/name-response-body"
+					},
+					{
+						"$ref": "#/components/schemas/error-response-body"
+					}
+				]
+			}
+		}
+	}
+}

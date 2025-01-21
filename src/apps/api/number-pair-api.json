@@ -1,0 +1,224 @@
+{
+	"openapi": "3.0.3",
+	"info":
+	{
+		"title": "Number pairs service",
+		"description": "HTTP service for generating a pair of random positive ints with given upper limit for each",
+		"version": "1.0"
+	},
+	"paths":
+	{
+		"/pair":
+		{
+			"get":
+			{
+				"tags":
+				[
+					"pairs"
+				],
+				"summary": "get a new pair",
+				"responses":
+				{
+					"200":
+					{
+						"description": "a new pair",
+						"content":
+						{
+							"application/json":
+							{
+								"schema":
+								{
+									"$ref": "#/components/schemas/pair-response-body-wrapper"
+								}
+							}
+						}
+					},
+					"500":
+					{
+						"description": "server error - most likely, limits not yet initialized",
+						"content":
+						{
+							"application/json":
+							{
+								"schema":
+								{
+									"$ref": "#/components/schemas/pair-response-body-wrapper"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/ranges":
+		{
+			"put":
+			{
+				"tags":
+				[
+					"ranges"
+				],
+				"summary": "Set the upper limits for the two numbers - lower limits are 0, upper limits must be > 0 and integer",
+				"requestBody":
+				{
+					"required": true,
+					"content":
+					{
+						"application/json":
+						{
+							"schema":
+							{
+								"$ref": "#/components/schemas/range-request-body"
+							}
+						}
+					}
+				},
+				"responses":
+				{
+					"202":
+					{
+						"description": "New limits are now in place, but might not be considered for already running requests",
+						"content":
+						{
+							"application/json":
+							{
+								"schema":
+								{
+									"$ref": "#/components/schemas/ranges-response-body-wrapper"
+								}
+							}
+						}
+					},
+					"400":
+					{
+						"description": "New upper limits are not valid.",
+						"content":
+						{
+							"application/json":
+							{
+								"schema":
+								{
+									"$ref": "#/components/schemas/ranges-response-body-wrapper"
+								}
+							}
+						}
+					},
+					"500":
+					{
+						"description": "Something went wrong",
+						"content":
+						{
+							"text/plain":
+							{
+								"schema":
+								{
+									"$ref": "#/components/schemas/ranges-response-body-wrapper"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components":
+	{
+		"schemas":
+		{
+			"error-response-body":
+			{
+				"type": "object",
+				"properties":
+				{
+					"message":
+					{
+						"type": "string"
+					}
+				}
+			},
+			"pair-response-body":
+			{
+				"type": "object",
+				"required": [
+					"one",
+					"two"
+				],
+				"properties":
+				{
+					"one":
+					{
+						"type": "integer",
+						"minimum": 0,
+						"maximum": 10000000,
+						"format": "int32"
+					},
+					"two":
+					{
+						"type": "integer",
+						"minimum": 0,
+						"maximum": 10000000,
+						"format": "int32"
+					}
+				}
+			},
+			"pair-response-body-wrapper":
+			{
+				"oneOf":
+				[
+					{
+						"$ref": "#/components/schemas/pair-response-body"
+					},
+					{
+						"$ref": "#/components/schemas/error-response-body"
+					}
+				]
+			},
+			"range-request-body":
+			{
+				"type": "object",
+				"required": [
+					"maxOne",
+					"maxTwo"
+				],
+				"properties":
+				{
+					"maxOne": {
+						"type": "integer",
+						"minimum": 1,
+						"maximum": 10000000,
+						"format": "int32"
+					},
+					"maxTwo": {
+						"type": "integer",
+						"minimum": 1,
+						"maximum": 10000000,
+						"format": "int32"
+					}
+				}
+			},
+			"empty-response-body":
+			{
+				"type": "object",
+				"properties":
+				{
+					"message":
+					{
+						"type": "string"
+					}
+				}
+			},
+			"ranges-response-body-wrapper":
+			{
+				"oneOf":
+				[
+					{
+						"$ref": "#/components/schemas/empty-response-body"
+					},
+					{
+						"$ref": "#/components/schemas/error-response-body"
+					}
+				]
+			}
+		}
+	}
+}

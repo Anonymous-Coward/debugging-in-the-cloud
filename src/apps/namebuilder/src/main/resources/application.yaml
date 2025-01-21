@@ -1,0 +1,11 @@
+server:
+  servlet:
+    context-path: "/namebuilder" 
+api:
+  basepaths:
+    numberpairs: http://localhost:9001/
+    adjectives: http://localhost:9002/
+    nouns: http://localhost:9003/
+logging:
+  level:
+    root: DEBUG

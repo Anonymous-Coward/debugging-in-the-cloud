@@ -1,0 +1,8 @@
+server:
+  error:
+    include-stacktrace: never
+  servlet:
+    context-path: "/words" 
+logging:
+  level:
+    root: DEBUG

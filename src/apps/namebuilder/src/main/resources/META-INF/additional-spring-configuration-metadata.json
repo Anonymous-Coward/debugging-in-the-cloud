@@ -1,0 +1,19 @@
+{
+	"properties": [
+		{
+			"name": "api.basepaths.numberpairs",
+			"type": "java.lang.String",
+			"description": "protocol, host, port and path prefix for number pairs API"
+		},
+		{
+			"name": "api.basepaths.adjectives",
+			"type": "java.lang.String",
+			"description": "protocol, host, port and path prefix for adjectives API"
+		},
+		{
+			"name": "api.basepaths.nouns",
+			"type": "java.lang.String",
+			"description": "protocol, host, port and path prefix for nouns API"
+		}
+	]
+}

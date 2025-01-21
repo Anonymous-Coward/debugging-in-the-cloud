@@ -1,0 +1,200 @@
+{
+	"openapi": "3.0.3",
+	"info":
+	{
+		"title": "Number pairs service",
+		"description": "HTTP service for getting a word from a list based on an index received in request",
+		"version": "1.0"
+	},
+	"paths":
+	{
+		"/word/{index}":
+		{
+			"get":
+			{
+				"summary": "get a word from a list based on an index received as parameter",
+				"parameters":
+				[
+					{
+						"name": "index",
+						"description": "Index for which to return word from list",
+						"required": true,
+						"in": "path",
+						"schema":
+						{
+							"type": "integer"
+						}
+					}
+				],
+				"responses":
+				{
+					"200":
+					{
+						"description": "word for index was delivered",
+						"content":
+						{
+							"application/json":
+							{
+								"schema":
+								{
+									"$ref": "#/components/schemas/word-response-body-wrapper"
+								}
+							}
+						}
+					},
+					"400":
+					{
+						"description": "index out of bounds (negative or beyond end of list)",
+						"content":
+						{
+							"application/json":
+							{
+								"schema":
+								{
+									"$ref": "#/components/schemas/word-response-body-wrapper"
+								}
+							}
+						}
+					},
+					"500":
+					{
+						"description": "server error - list not initialized or invalid request (index missing, not integer etc.)",
+						"content":
+						{
+							"application/json":
+							{
+								"schema":
+								{
+									"$ref": "#/components/schemas/word-response-body-wrapper"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/list":
+		{
+			"put":
+			{
+				"summary": "Set the list from which words should be returned",
+				"requestBody":
+				{
+					"required": true,
+					"content":
+					{
+						"application/json":
+						{
+							"schema":
+							{
+								"$ref": "#/components/schemas/list-request-body"
+							}
+						}
+					}
+				},
+				"responses":
+				{
+					"202":
+					{
+						"description": "New list is now in place, but might not be considered for already running requests",
+						"content":
+						{
+							"application/json":
+							{
+								"schema":
+								{
+									"$ref": "#/components/schemas/list-response-body-wrapper"
+								}
+							}
+						}
+					},
+					"500":
+					{
+						"description": "Something went wrong",
+						"content":
+						{
+							"text/plain":
+							{
+								"schema":
+								{
+									"$ref": "#/components/schemas/list-response-body-wrapper"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components":
+	{
+		"schemas":
+		{
+			"list-request-body":
+			{
+				"type": "array",
+				"items":
+				{
+					"type": "string"
+				}
+			},
+			"error-response-body":
+			{
+				"type": "object",
+				"properties":
+				{
+					"message":
+					{
+						"type": "string"
+					}
+				}
+			},
+			"empty-response-body":
+			{
+				"type": "object",
+				"properties":
+				{
+					"message":
+					{
+						"type": "string"
+					}
+				}
+			},
+			"word-response-body":
+			{
+				"type": "object",
+				"properties":
+				{
+					"word":
+					{
+						"type": "string"
+					}
+				}
+			},
+			"word-response-body-wrapper":
+			{
+				"oneOf":
+				[
+					{
+						"$ref": "#/components/schemas/word-response-body"
+					},
+					{
+						"$ref": "#/components/schemas/error-response-body"
+					}
+				]
+			},
+			"list-response-body-wrapper":
+			{
+				"oneOf":
+				[
+					{
+						"$ref": "#/components/schemas/empty-response-body"
+					},
+					{
+						"$ref": "#/components/schemas/error-response-body"
+					}
+				]
+			}
+		}
+	}
+}

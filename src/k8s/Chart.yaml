@@ -1,0 +1,6 @@
+apiVersion: v2
+name: system-resources
+description: Helm chart deploying resources that need to be correlated among multiple systems
+type: application
+version: 0.1.0
+appVersion: "1.16.0"

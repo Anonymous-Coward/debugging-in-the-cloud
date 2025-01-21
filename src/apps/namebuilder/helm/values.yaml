@@ -1,0 +1,23 @@
+replicaCount: 1
+
+image:
+  repository: kind.local/namebuilder
+  pullPolicy: Never
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: 0.0.1-SNAPSHOT
+
+nameOverride: ""
+fullnameOverride: ""
+
+service:
+  name: namebuilder
+  type: ClusterIP
+  port: 80
+
+dependencies:
+  adjectives:
+    url: http://word.adjectives.svc.cluster.local/adjectives
+  nouns:
+    url: http://word.nouns.svc.cluster.local/nouns
+  numberPairs:
+    url: http://numberpair.number-pair.svc.cluster.local/number-pair

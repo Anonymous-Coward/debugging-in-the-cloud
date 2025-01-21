@@ -1,0 +1,8 @@
+server:
+  error:
+    include-stacktrace: never
+  servlet:
+    context-path: "/numberpair" 
+logging:
+  level:
+    root: DEBUG

@@ -1,0 +1,16 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nginx-ingress
+  namespace: adjectives
+spec:
+  rules:
+  - http:
+      paths:
+      - pathType: Prefix
+        path: "/adjectives"
+        backend:
+          service:
+            name: word
+            port:
+              number: 80

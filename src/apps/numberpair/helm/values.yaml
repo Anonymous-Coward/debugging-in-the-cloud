@@ -1,0 +1,19 @@
+replicaCount: 1
+
+image:
+  repository: kind.local/numberpair
+  pullPolicy: Never
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: 0.0.1-SNAPSHOT
+
+nameOverride: ""
+fullnameOverride: ""
+
+service:
+  name: numberpair
+  type: ClusterIP
+  port: 80
+
+ranges:
+  one:
+  two:

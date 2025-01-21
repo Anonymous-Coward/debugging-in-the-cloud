@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "word-dispenser.fullname" . }}
+  labels:
+    {{- include "word-dispenser.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "word-dispenser.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "word-dispenser.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+          - name: BASE_PATH
+            value: /{{ .Release.Namespace }}
+          - name: ADJECTIVES_URL
+            value: {{ .Values.dependencies.adjectives.url }}
+          - name: NOUNS_URL
+            value: {{ .Values.dependencies.nouns.url }}
+          - name: NUMBER_PAIRS_URL
+            value: {{ .Values.dependencies.numberPairs.url }}
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /{{ .Release.Namespace }}/health
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /{{ .Release.Namespace }}/health
+              port: http
